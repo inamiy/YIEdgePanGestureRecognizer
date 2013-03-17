@@ -86,6 +86,18 @@
 - (BOOL)canBePreventedByGestureRecognizer:(UIGestureRecognizer *)preventingGestureRecognizer
 {
     if (!CGPointEqualToPoint(_firstTouchLocation, CGPointZero)) {
+        
+        //
+        // Force-cancel other gestures (e.g. scrolling) for iOS6
+        //
+        // NOTE:
+        // iOS5 calls canPreventGestureRecognizer when other gesture is active but not for iOS6,
+        // so we implement cancelling logic on canBePreventedByGestureRecognizer here.
+        //
+        BOOL enabled = preventingGestureRecognizer.enabled;
+        preventingGestureRecognizer.enabled = NO;
+        preventingGestureRecognizer.enabled = enabled;
+        
         return NO;
     }
     else {
